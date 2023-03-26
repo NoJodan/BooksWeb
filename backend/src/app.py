@@ -1,12 +1,16 @@
 from flask import Flask, request, jsonify
 from flask_pymongo import PyMongo, ObjectId
 from flask_cors import CORS
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
 app = Flask(__name__)
-app.config['MONGO_URI'] = 'mongodb://localhost/booksweb'
+app.config['MONGO_URI'] = os.getenv('MONGO_URI')
 mongo = PyMongo(app)
 
-CORS(app)
+cors = CORS()
+cors.init_app(app)
 
 db = mongo.db.books
 
