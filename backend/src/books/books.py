@@ -2,7 +2,7 @@ from flask import Blueprint, jsonify, request
 from app import mongo
 from flask_pymongo import ObjectId
 from schemas.books import validate_book
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required
 from utils.decorators import user_access_required
 
 books_blueprint = Blueprint('books', __name__)
@@ -126,7 +126,7 @@ def deleteBook(id,user_id):
                         'delete': True
                     }})
 
-@books_blueprint.route('/book/<id>', methods = ['PUT'])
+@books_blueprint.route('/books/<id>', methods = ['PUT'])
 @jwt_required()
 @user_access_required(action='update',name='not_updated',pass_user_id = True)
 def updateBook(id,user_id):
