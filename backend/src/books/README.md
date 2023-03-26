@@ -22,10 +22,10 @@ This action creates a new book in the database
 >  body: JSON.stringify(payload)
 > };
 >
-> fetch('http://example.com/api/books', options)
->
+> fetch('http://example.com/api/books', options).then(response => {
+>   //Your code here    
+>})
 >```
->
 > #### example response
 > ```json
 > {
@@ -64,17 +64,31 @@ This action returns all books in the database
 > #### @others
 > * returns all books in the database except those of the requesting user
 
-
 > exmaple request
 > ```js
 >const options = {
 >   method: 'GET',
 >   headers: {    
 >       'Authorization': 'Bearer <token>'
->  };
->
->fetch('http://example.com/api/books', options).then(response => response.json())
+>   }
+>};
+>fetch('http://example.com/api/books', options).then(response => {
+>   //Your code here    
+>})
 > ```
+
+> #### example response
+> ```json
+> {
+>   "msg": "Books retrieved",
+>   "status": {
+>        "name": "retrieved",
+>        "action": "get",
+>        "get": true
+>    }
+> }
+> ```
+
 
 ### GET `/api/books/<id>`
 This action returns a book in the database getted by id
@@ -88,7 +102,32 @@ This action returns a book in the database getted by id
 >   }
 >};
 >
->fetch('http://example.com/api/books/1', options).then(response => response.json())
+>fetch('http://example.com/api/books/1', options).then(response => {
+>   //Your code here    
+>})
+> ```
+
+> #### example response
+> ```json
+> {
+>   "msg": "Book retrieved",
+>   "status": {
+>        "name": "retrieved",
+>        "action": "get",
+>        "get": true
+>    }
+> }
+> ```
+> #### error response
+> ```json
+>  {
+>    "msg": "Book not found",
+>    "status": {
+>        "name": "not_found",
+>        "action": "get",
+>        "get": false
+>    }
+>  }
 > ```
 
 ### DELETE `/api/books/<id>`
@@ -103,7 +142,32 @@ This action deletes a book in the database
 >    }
 >};
 >
->fetch('http://example.com/api/books/1', options).then(response => response.json())
+>fetch('http://example.com/api/books/1', options).then(response => {
+>   //Your code here    
+>})
+> ```
+
+> #### example response
+> ```json
+> {
+>   "msg": "Book deleted",
+>   "status": {
+>        "name": "deleted",
+>        "action": "delete",
+>        "delete": true
+>    }
+> }
+> ```
+> #### error response
+> ```json
+>  {
+>    "msg": "Book not found",
+>    "status": {
+>        "name": "not_found",
+>        "action": "delete",
+>        "delete": false
+>    }
+>  }
 > ```
 
 ### PUT `/api/books/<id>`
@@ -127,5 +191,30 @@ This action updates a book in the database
 >  body: JSON.stringify(payload)
 > };
 >
->fetch('http://example.com/api/books/1', options).then(response => response.json())
+>fetch('http://example.com/api/books/1', options).then(response => {
+>   //Your code here    
+>})
+> ```
+
+> #### example response
+> ```json
+> {
+>   "msg": "Book updated",
+>   "status": {
+>        "name": "updated",
+>        "action": "update",
+>        "update": true
+>    }
+> }
+> ```
+> #### error response
+> ```json
+>  {
+>    "msg": "Invalid book",
+>    "status": {
+>        "name": "not_updated",
+>        "action": "update",
+>        "update": false
+>    }
+>  }
 > ```
