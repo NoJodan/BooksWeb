@@ -58,11 +58,16 @@ This action returns all books in the database
 > ### poster options
 > * @me
 > * @others 
+> * @all
 >
 > #### @me
 > * returns all books published by the requesting user
 > #### @others
 > * returns all books in the database except those of the requesting user
+
+> #### @all
+> * returns all books in the database
+
 
 > exmaple request
 > ```js
