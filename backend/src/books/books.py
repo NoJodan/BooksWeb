@@ -1,10 +1,10 @@
 from flask import Blueprint, jsonify, request
 from app import mongo
 from flask_pymongo import ObjectId
-from schemas.books import validate_book
+from schemas.books import validate_provided_book, validate_local_book
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from utils.decorators import user_access_required
-from utils.users import get_user_id
+from utils.users import get_user_id, get_username
 from utils.others import validate_category
 
 
@@ -25,7 +25,7 @@ def createBook(user_id):
     
     
     
-    if not validate_book(book):
+    if not validate_provided_book(book):
         return jsonify({'msg': 'Invalid book','status': {
             'name': 'not_created',
             'action': 'create',
@@ -36,7 +36,7 @@ def createBook(user_id):
         'user_id': user_id,
         'name': book.get('name'),
         'description': book.get('description'),
-        'author': book.get('author'),
+        'author': get_username(user_id),
         'categories': book.get('categories')
     })
     return jsonify({'msg': 'Book created','status': {
@@ -186,8 +186,8 @@ def updateBook(id,user_id):
             'update': False
         }})
     
-    book = mongo.db.books.find_one({'_id': ObjectId(id)})
-    if not book:
+    db_book = mongo.db.books.find_one({'_id': ObjectId(id)})
+    if not db_book:
         return jsonify({
             'msg': 'Book not found',
             'status': {
@@ -196,7 +196,7 @@ def updateBook(id,user_id):
                 'delete': False
                 }   
             })
-    if book.get('user_id') != user_id:
+    if db_book.get('user_id') != user_id:
         return jsonify({
             'msg': 'This book does not belong to you',
             'status': {
@@ -206,7 +206,7 @@ def updateBook(id,user_id):
             }
         })
     
-    if not validate_book(book):
+    if not validate_provided_book(book):
         return jsonify({'msg': 'Invalid book','status': {
             'name': 'not_updated',
             'action': 'update',
@@ -216,7 +216,6 @@ def updateBook(id,user_id):
     mongo.db.books.update_one({'user_id': user_id,'_id': ObjectId(id)}, {'$set': {
         'name': book.get('name'),
         'description': book.get('description'),
-        'author': book.get('author'),
         'categories': book.get('categories')
     }})
     return jsonify({

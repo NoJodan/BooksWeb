@@ -16,6 +16,13 @@ def login():
     auth = request.authorization
     user = mongo.db.users.find_one({'username': auth.username})
 
+    stay_loged_in = request.args.get('stay_loged_in')
+    
+    if not stay_loged_in:
+        expires_delta = app.config['JWT_ACCESS_TOKEN_EXPIRES']
+    else:
+        expires_delta = datetime.timedelta(days=7)
+    
     if not user:
         return jsonify({'msg': 'User does not exist',
                         'status':{
@@ -26,7 +33,7 @@ def login():
                         }), 401
 
     if auth and check_password(auth.password,user['password_hash']):
-        token = create_access_token(identity=auth.username)
+        token = create_access_token(identity=auth.username,expires_delta=expires_delta)
 
         return jsonify({'msg': 'User logged in successfully',
                         'status':{
@@ -62,7 +69,7 @@ def register():
                         }), 400
 
     
-    if not validate_user(username):
+    if validate_user(username):
         return jsonify({'msg': 'Username already exists',
                         'status': {
                             'name': 'data_conflict',

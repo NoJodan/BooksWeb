@@ -10,7 +10,15 @@ load_dotenv()
 app = Flask(__name__)
 app.config['MONGO_URI'] = getenv('MONGO_URI')
 app.config['SECRET_KEY'] = getenv('SECRET_KEY')
-app.config['JWT_ACCESS_TOKEN_EXPIRES'] = datetime.timedelta(minutes=30)
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = datetime.timedelta(days=1)
 mongo = PyMongo(app)
 jwt = JWTManager(app)
-CORS(app)
+cors = CORS(app, resources={
+    r"/*": {
+        "origins": ["http://localhost:3000"],
+        "methods": ["GET", "POST", "DELETE", "PUT", "OPTIONS"],
+        "allow_headers": ["Authorization", "Content-Type"]
+    }
+})
+
+cors.init_app(app)
