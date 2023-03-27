@@ -54,7 +54,7 @@ This action is used to login a user.
 > example request
 >
 > ```js
-> const username = 'john':
+> const username = 'john';
 > const password = 'secret';
 > 
 > const payload = btoa(`${username}:${password}`);

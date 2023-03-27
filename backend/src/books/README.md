@@ -8,8 +8,8 @@ This action creates a new book in the database
 > ```js
 > const payload = {
 >   book:{
->       name: 'Example name'
->       description: 'Example description'
+>       name: 'Example name',
+>       description: 'Example description',
 >       categories: ['Fiction', 'Mystery','Thriller']
 >   }
 > }
@@ -143,7 +143,7 @@ This action deletes a book in the database
 > example request
 > ```js
 >const options = {
->    method: 'DELETE'
+>    method: 'DELETE',
 >    headers: {
 >        'Authorization': 'Bearer <token>'
 >    }
@@ -184,9 +184,9 @@ This action updates a book in the database
 > ```js
 > const payload = {
 >   book:{
->       name: 'Example name'
->       description: 'Example description'
->       author: 'Example author'
+>       name: 'Example name',
+>       description: 'Example description',
+>       categories: ['Fiction', 'Mystery','Thriller']
 >   }
 > };
 > const options = {
