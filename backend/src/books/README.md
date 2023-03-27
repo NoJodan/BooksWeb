@@ -52,22 +52,24 @@ This action creates a new book in the database
 ### GET `/api/books/`
 This action returns all books in the database
 > ## params
-> * poster
+> * filter
 > 
 >
-> ### poster options
-> * @me
-> * @others 
-> * @all
->
-> #### @me
+> ### fitler options
+> * `@me`
+> * `@others`
+> * `@all`
+> * `#<category>`
+> #### `@me`
 > * returns all books published by the requesting user
-> #### @others
+> #### `@others`
 > * returns all books in the database except those of the requesting user
 
-> #### @all
+> #### `@all`
 > * returns all books in the database
 
+> #### `#<category>`
+> * returns all books in the category
 
 > exmaple request
 > ```js

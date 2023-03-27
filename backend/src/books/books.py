@@ -5,6 +5,7 @@ from schemas.books import validate_book
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from utils.decorators import user_access_required
 from utils.users import get_user_id
+from utils.others import validate_category
 
 
 books_blueprint = Blueprint('books', __name__)
@@ -35,7 +36,8 @@ def createBook(user_id):
         'user_id': user_id,
         'name': book.get('name'),
         'description': book.get('description'),
-        'author': book.get('author')
+        'author': book.get('author'),
+        'categories': book.get('categories')
     })
     return jsonify({'msg': 'Book created','status': {
         'name': 'created',
@@ -53,40 +55,50 @@ def createBook(user_id):
 def getBooks():
     
     user_id = get_user_id(get_jwt_identity())
-    aditional = None
-    
-    poster = request.args.get('poster')
-    if not poster:
+
+    Filter = request.args.get('filter')
+    if not Filter:
         books = mongo.db.books.find({})
     else:
-        if not poster.startswith('@'):
-            user_id = mongo.db.users.find_one({'username': poster}).get('_id')
+        if not Filter[0] in ['@', '#']:
+            user_id = mongo.db.users.find_one({'username': Filter}).get('_id')
             books = mongo.db.books.find({'user_id': user_id})
-        else:
+        elif Filter.startswith('@'):
             if not user_id:
-                return jsonify({'msg': 'poster @ filters are not allowed if JWT token is not provided',
+                return jsonify({'msg': '@ filters are not allowed if JWT token is not provided',
                         'status': {
                             'name': 'bad_request',
                             'action': 'get',
                             'get': False
                         }
                         }), 400
-            if poster == '@me':
+            if Filter == '@me':
                 books = mongo.db.books.find({'user_id': user_id})
-            elif poster == '@others':
+            elif Filter == '@others':
                 books = mongo.db.books.find({'user_id': {'$nin': [user_id]}})
-            elif poster == '@all':
+            elif Filter == '@all':
                 books = mongo.db.books.find({})  
             else:
-                return jsonify({'msg': f'unknow @ filter "{poster}"',
+                return jsonify({'msg': f'unknow @ filter "{Filter}"',
                                 'status':{
                                     'name': 'bad_request',
                                     'action': 'get',
                                     'get': False
                                 }
                                 }), 400
-            
-    return jsonify({
+        elif Filter.startswith('#'):
+            category = Filter[1:]
+            if not validate_category(category):
+                return jsonify({'msg': f'invalid category "{category}"',
+                                'status': {
+                                    'name': 'bad_request',
+                                    'action': 'get',
+                                    'get': False
+                                }}), 400
+            books = mongo.db.books.find({'categories': {'$elemMatch': {'$eq': category}}})
+    
+    books = list(books)        
+    return jsonify( {
         'msg': 'Books retrieved',
         'status': {
             'name': 'retrieved',
@@ -97,7 +109,8 @@ def getBooks():
             'id': str(book.get('_id')),
             'name': book.get('name'),
             'description': book.get('description'),
-            'author': book.get('author')
+            'author': book.get('author'),
+            'categories': book.get('categories')
             },books))
         })
 
@@ -123,7 +136,8 @@ def getBook(id):
                 '_id': str(ObjectId(book['_id'])),
                 'name': book.get('name'),
                 'description': book.get('description'),
-                'author': book.get('author')
+                'author': book.get('author'),
+                'categories': book.get('categories')
             }
     })
 
@@ -202,7 +216,8 @@ def updateBook(id,user_id):
     mongo.db.books.update_one({'user_id': user_id,'_id': ObjectId(id)}, {'$set': {
         'name': book.get('name'),
         'description': book.get('description'),
-        'author': book.get('author')
+        'author': book.get('author'),
+        'categories': book.get('categories')
     }})
     return jsonify({
         'msg': 'Book updated',
