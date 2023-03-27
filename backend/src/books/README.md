@@ -10,7 +10,7 @@ This action creates a new book in the database
 >   book:{
 >       name: 'Example name'
 >       description: 'Example description'
->       author: 'Example author'
+>       categories: ['Fiction', 'Mystery','Thriller']
 >   }
 > }
 > const options = {

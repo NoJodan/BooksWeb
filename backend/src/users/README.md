@@ -71,6 +71,20 @@ This action is used to login a user.
 >});
 > ```
 
+> ## params
+> * stay_loged_in
+>
+>
+> #### stay_loged_in options
+>   * `true`
+>   * `false`
+>
+> #### `true`
+> * returns a token that expires in 7 days
+
+> #### `false`
+> * returns a token that expires in 24 hours
+
 > #### example response
 > ```json
 > {
