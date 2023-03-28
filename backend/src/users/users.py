@@ -89,6 +89,7 @@ def register():
     
     mongo.db.users.insert_one({'username': username,
                                'password_hash': get_password(password),
+                               'admin': False,
                                'created_at': datetime.datetime.utcnow(),
                                })
     

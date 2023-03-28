@@ -4,7 +4,7 @@ from flask_pymongo import ObjectId
 from schemas.books import validate_provided_book, validate_local_book
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from utils.decorators import user_access_required
-from utils.users import get_user_id, get_username
+from utils.users import get_user_id, get_username, validate_admin
 from utils.others import validate_category
 
 
@@ -155,6 +155,16 @@ def deleteBook(id,user_id):
                 'delete': False
                 }   
             })
+    
+    if validate_admin(user_id):
+        mongo.db.books.delete_one({'_id': ObjectId(id)})
+        return jsonify({'msg': 'Book deleted',
+                    'status': {
+                        'name': 'deleted',
+                        'action': 'delete',
+                        'delete': True
+                    }})
+
     if book.get('user_id') != user_id:
         return jsonify({
             'msg': 'This book does not belong to you',
@@ -164,7 +174,6 @@ def deleteBook(id,user_id):
                 'delete': False
                 }   
             })
-    
     
     mongo.db.books.delete_one({'user_id': user_id,'_id': ObjectId(id)})
     return jsonify({'msg': 'Book deleted',

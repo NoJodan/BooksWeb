@@ -23,3 +23,8 @@ def validate_username(username):
     username_re = re.compile(r'^[a-zA-Z0-9_]{3,}$')
     return username_re.findall(username) != []
 
+def validate_admin(user_id):
+    user = mongo.db.users.find_one({'_id': user_id})
+    if not user.get('admin'):
+        return False
+    return True
