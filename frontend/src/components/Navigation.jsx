@@ -7,10 +7,11 @@ const API = process.env.NEXT_PUBLIC_API;
 export const Navigation = () => {
     
     const [token_expired, setTokenExpired] = useState(false);
-    const [token, setToken] = useState(undefined);
+    const [jwt, setJwt] = useState(undefined);
 
     const getTokenData = async () => {
         const token = localStorage.token;
+        setJwt(token);
         const headers = token === undefined ? {} : {
             'Authorization': `Bearer ${token}`
         }
@@ -24,7 +25,7 @@ export const Navigation = () => {
 
     useEffect(() => {
         getTokenData();
-    }, [token,token_expired]);
+    }, [jwt,token_expired]);
 
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
@@ -59,7 +60,7 @@ export const Navigation = () => {
                     
                     <ul className="navbar-nav mx-1">
                         {
-                        token_expired || token === undefined ? (
+                        token_expired || jwt === undefined ? (
                         <>
                         <li className="nav-item">
                             <Link className="nav-link" href="/signup">
@@ -77,7 +78,7 @@ export const Navigation = () => {
                             <button className="btn btn-primary" type="button" onClick={(e) => {
                                 e.preventDefault();
                                 localStorage.removeItem('token');
-                                setToken(undefined);
+                                setJwt(undefined);
                             }} >Logout</button>
                         </li>)
                         

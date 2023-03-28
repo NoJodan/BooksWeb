@@ -29,7 +29,6 @@ const Login = () => {
         const response = await fetch(`${API}/users/login`, options);
         const data = await response.json();
         localStorage.setItem('token', data.data.token);
-        console.log(data);
         await router.push('/');
     }
 
