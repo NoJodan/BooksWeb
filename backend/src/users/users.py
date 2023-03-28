@@ -18,10 +18,10 @@ def login():
 
     stay_loged_in = request.args.get('stay_loged_in')
     
-    if not stay_loged_in:
-        expires_delta = app.config['JWT_ACCESS_TOKEN_EXPIRES']
-    else:
+    if stay_loged_in == "true":
         expires_delta = datetime.timedelta(days=7)
+    else:
+        expires_delta = app.config['JWT_ACCESS_TOKEN_EXPIRES']
     
     if not user:
         return jsonify({'msg': 'User does not exist',

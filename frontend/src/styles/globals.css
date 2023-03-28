@@ -1,0 +1,30 @@
+.book{
+  color: #222;
+  width: 36rem;
+  font-size: 20px;
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  background-color: #F0EEED;
+  border-radius: 10px;
+  border: 1px solid #666;
+}
+.description{
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-bottom: 20px;
+  text-align: left;
+}
+.a-button{
+  color: #6495ed;
+}
+.a-button:hover{
+  color: #4668a6;
+  cursor: pointer;
+}
+
+.login-card{
+  text-align: center;
+  align-items: center;
+  width: 30rem;
+}
