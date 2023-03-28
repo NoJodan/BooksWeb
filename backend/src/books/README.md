@@ -56,20 +56,24 @@ This action returns all books in the database
 > 
 >
 > ### fitler options
-> * `@me`
-> * `@others`
-> * `@all`
+> * `$me`
+> * `$others`
+> * `$all`
 > * `#<category>`
-> #### `@me`
+> * `@<author>`
+> #### `$me`
 > * returns all books published by the requesting user
-> #### `@others`
+> #### `$others`
 > * returns all books in the database except those of the requesting user
 
-> #### `@all`
+> #### `$all`
 > * returns all books in the database
 
 > #### `#<category>`
 > * returns all books in the category
+
+>> #### `@<author>`
+> * returns all books by the author
 
 > exmaple request
 > ```js

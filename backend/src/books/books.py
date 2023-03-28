@@ -60,23 +60,24 @@ def getBooks():
     if not Filter:
         books = mongo.db.books.find({})
     else:
-        if not Filter[0] in ['@', '#']:
+        if Filter.startswith('@'):
+            Filter = Filter.replace('@', '')
             user_id = mongo.db.users.find_one({'username': Filter}).get('_id')
             books = mongo.db.books.find({'user_id': user_id})
-        elif Filter.startswith('@'):
+        elif Filter.startswith('$'):
             if not user_id:
-                return jsonify({'msg': '@ filters are not allowed if JWT token is not provided',
+                return jsonify({'msg': '$ filters are not allowed if JWT token is not provided',
                         'status': {
                             'name': 'bad_request',
                             'action': 'get',
                             'get': False
                         }
                         }), 400
-            if Filter == '@me':
+            if Filter == '$me':
                 books = mongo.db.books.find({'user_id': user_id})
-            elif Filter == '@others':
+            elif Filter == '$others':
                 books = mongo.db.books.find({'user_id': {'$nin': [user_id]}})
-            elif Filter == '@all':
+            elif Filter == '$all':
                 books = mongo.db.books.find({})  
             else:
                 return jsonify({'msg': f'unknow @ filter "{Filter}"',
