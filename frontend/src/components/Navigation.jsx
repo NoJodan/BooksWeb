@@ -7,7 +7,7 @@ const API = process.env.NEXT_PUBLIC_API;
 export const Navigation = () => {
     
     const [token_expired, setTokenExpired] = useState(false);
-    const [token, setToken] = useState("");
+    const [token, setToken] = useState(undefined);
 
     const getTokenData = async () => {
         const token = localStorage.token;
