@@ -53,7 +53,7 @@ const Signup = () => {
         }
         const response2 = await fetch(`${API}/users/login`, options2);
         const data2 = await response2.json();
-        localStorage.setItem('JWT', data2.data.token);
+        localStorage.setItem('token', data2.data.token);
         
 
         await router.push('/');
