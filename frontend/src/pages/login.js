@@ -28,6 +28,10 @@ const Login = () => {
         }
         const response = await fetch(`${API}/users/login`, options);
         const data = await response.json();
+        if(data.data === undefined){
+            alert(data.msg);
+            return;
+        }
         localStorage.setItem('token', data.data.token);
         await router.push('/');
     }
