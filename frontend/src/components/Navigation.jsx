@@ -31,6 +31,16 @@ export const Navigation = () => {
         <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
             <div className="container-lg">
                 <Link className="navbar-brand" href="/">Books Web</Link>
+                <button
+                    className="navbar-toggler"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#navbarColor01"
+                    aria-controls="navbarColor01"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span className="navbar-toggler-icon" />
+                </button>
                 <div className="collapse navbar-collapse">
                     <ul className="navbar-nav me-auto">
                         <li className="nav-item">
