@@ -34,7 +34,7 @@ const Signup = () => {
                 password: password
             })
         }
-        const response = await fetch(`${API}/users/register`, options);
+        const response = await fetch(`${API}/users`, options);
         const data = await response.json();
         if (data.status.name === 'data_conflict') {
             alert(data.msg);
@@ -51,7 +51,7 @@ const Signup = () => {
                 'Authorization': `Basic ${payload}`
             }
         }
-        const response2 = await fetch(`${API}/users/login`, options2);
+        const response2 = await fetch(`${API}/users`, options2);
         const data2 = await response2.json();
         localStorage.setItem('token', data2.data.token);
         

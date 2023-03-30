@@ -1,13 +1,13 @@
 # DOCS
 
-### POST `/api/users/register`
+### POST `/api/users`
 This action is used to register a new user.
 
 > example request with javascript
 >
 > ```js
 > const payload = {
->   username: 'john'
+>   username: 'john',
 >   password: 'secret'
 > }
 >
@@ -19,7 +19,7 @@ This action is used to register a new user.
 >   body: JSON.stringify(payload)
 > }   
 > 
-> fetch('http://localhost:8000/api/users/register', options).then(response => {
+> fetch('http://localhost:8000/api/users', options).then(response => {
 >   //Your code here    
 >});
 > ```
@@ -48,7 +48,7 @@ This action is used to register a new user.
 > ```
 
 
-### GET `/api/users/login`
+### GET `/api/users`
 This action is used to login a user.
 
 > example request
@@ -60,12 +60,12 @@ This action is used to login a user.
 > const payload = btoa(`${username}:${password}`);
 >    
 > const options = {
->   method: 'POST',
+>   method: 'GET',
 >   headers: {
 >       'Authorization': `Basic ${payload}`
 >   }
 > }
-> fetch('http://localhost:8000/api/users/login', options).then(response => {
+> fetch('http://localhost:8000/api/users', options).then(response => {
 >   //Your code here
 >});
 > ```
@@ -106,6 +106,54 @@ This action is used to login a user.
 >        "name": "invalid_data",
 >        "action": "login",
 >        "login": false
+>    }
+>  }
+> ```
+
+### PUT `/api/users`
+This action is used to update a user.
+
+> example request with javascript
+>
+> ```js
+> const payload = {
+>   user: {
+>       username: 'john 2',
+>   }
+> }
+>
+> const options = {
+>   method: 'PUT',
+>   headers: {
+>     'Content-Type': 'application/json'
+>   },
+>   body: JSON.stringify(payload)
+> }   
+> 
+> fetch('http://localhost:8000/api/users', options).then(response => {
+>   //Your code here    
+>});
+> ```
+
+> #### example response
+> ```json
+> {
+>   "msg": "User update successfully",
+>   "status": {
+>        "name": "update",
+>        "action": "update",
+>        "update": true
+>    }
+> }
+> ```
+> #### error response
+> ```json
+>  {
+>    "msg": "Invalid user",
+>    "status": {
+>        "name": "not_updated",
+>        "action": "update",
+>        "update": false
 >    }
 >  }
 > ```

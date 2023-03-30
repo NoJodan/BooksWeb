@@ -1,7 +1,6 @@
 import { Container } from '@/components/Container'
 import { Book } from '@/components/Book'
 import { useEffect, useState } from 'react'
-import { headers } from '../../next.config'
 
 const API = process.env.NEXT_PUBLIC_API
 
@@ -20,7 +19,7 @@ export default function Home() {
             method: 'GET',
             headers: headers
         }
-        const response = await fetch(`${API}/books`)
+        const response = await fetch(`${API}/books`,options)
         const data = await response.json()
         setData(data.data);
     }
@@ -35,10 +34,10 @@ export default function Home() {
             <div className="row">
                 <div className="col-12">
                     {
-                        data.map((book) => (
-                            <>
-                                <Book key={book.id} name={book.name} author={book.author} description={book.description} className="my-5" /> 
-                            </>                  
+                    data.map((book,index,books) => (
+                    <>
+                        <Book key={book.id} previousId={index === 0 ? book.id : books[index-1].id} id={book.id} name={book.name} author={book.author} description={book.description} className="my-5" /> 
+                    </>                  
                     ))
                     }
                 </div>

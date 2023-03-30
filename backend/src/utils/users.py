@@ -6,7 +6,14 @@ def validate_user(username):
     if not user:
         return False
     return True
-    
+
+def validate_user_by_id(user_id):
+    user = mongo.db.users.find_one({'_id': user_id})
+    if not user:
+        return False
+    return True
+
+
 def get_user_id(username):
     if not validate_user(username):
         return None

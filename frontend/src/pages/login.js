@@ -26,7 +26,7 @@ const Login = () => {
                 'Authorization': `Basic ${payload}`
             }
         }
-        const response = await fetch(`${API}/users/login`, options);
+        const response = await fetch(`${API}/users`, options);
         const data = await response.json();
         if(data.data === undefined){
             alert(data.msg);

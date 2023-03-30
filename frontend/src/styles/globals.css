@@ -1,3 +1,7 @@
+html{
+  scroll-behavior: smooth!important;
+}
+
 .book{
   color: #222;
   width: 36rem;

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export const TruncatedParagraph = ({ className, text, charLimit, maxSize = 40 }) => {
+export const TruncatedParagraph = ({previousId, id, className, text, charLimit, maxSize = 40 }) => {
   const [showFullText, setShowFullText] = useState(false);
 
   const toggleShowFullText = () => {
@@ -14,7 +14,7 @@ export const TruncatedParagraph = ({ className, text, charLimit, maxSize = 40 })
     <>
     {
         maxSizeText ? (<p className={className}>{showFullText ? text : truncatedText} {text.length > charLimit && (
-            <a className='a-button' onClick={toggleShowFullText}>{showFullText ? 'Ver menos' : 'Ver más...'}</a>
+            <a className='a-button' href={showFullText ? `#${id}` : `#${previousId}`} onClick={toggleShowFullText}>{showFullText ? 'Ver menos' : 'Ver más...'}</a>
         )}</p>) : (<h2 className={className}>{text}</h2>)
     }
     </>
