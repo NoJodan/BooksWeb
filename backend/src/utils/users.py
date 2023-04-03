@@ -1,4 +1,5 @@
 from app import mongo
+from flask_pymongo import ObjectId
 import re
 
 def validate_user(username):
@@ -8,7 +9,10 @@ def validate_user(username):
     return True
 
 def validate_user_by_id(user_id):
-    user = mongo.db.users.find_one({'_id': user_id})
+    if isinstance(user_id, ObjectId):
+        user = mongo.db.users.find_one({'_id': user_id})
+    else:
+        user = mongo.db.users.find_one({'_id': ObjectId(user_id)})
     if not user:
         return False
     return True

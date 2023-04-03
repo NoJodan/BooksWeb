@@ -1,6 +1,7 @@
 import base64
 from flask import request, jsonify, blueprints
 from app import mongo, app
+from flask_pymongo import ObjectId
 from utils.others import process_profile_image, delete_profile_image
 from utils.passwords import check_password, get_password
 from utils.users import validate_username, validate_user, get_username, validate_user_by_id, get_user_id, validate_admin
@@ -19,11 +20,20 @@ def get_user_data(username):
     user_id = get_user_id(username)
 
 
-@users_blueprint.route('/users', methods=['DELETE'])
+@users_blueprint.route('/users/<user>', methods=['DELETE'])
 @jwt_required()
 @user_access_required('delete', 'not_deleted', pass_user_id=True)
-def delete_user(user_id):
-    if not validate_user_by_id(user_id):
+def delete_user(user, user_id):
+    if not validate_admin(user_id):
+        return jsonify({'msg': 'You are not administrator',
+                        'status': {
+                            'name': 'not_authorized',
+                            'action': 'delete',
+                            'delete': False
+                        }
+                        }), 401
+        
+    if not validate_user_by_id(user):
         return jsonify({'msg': 'User does not exist',
                         'status': {
                             'name': 'not_found',
@@ -32,7 +42,7 @@ def delete_user(user_id):
                         }
                         }), 401
 
-    books = mongo.db.books.find({'user_id': user_id})
+    books = mongo.db.books.find({'user_id': ObjectId(user)})
     if list(books) != []:
         return jsonify({'msg': 'Cannot delete user with books',
                         'status': {
@@ -42,12 +52,11 @@ def delete_user(user_id):
                         }
                         }), 409
 
-    profile_image = mongo.db.users.find_one(
-        {'_id': user_id}).get('profile_image')
+    profile_image = mongo.db.users.find_one({'_id': ObjectId(user)}).get('profile_image')
     if profile_image != "default.jpg":
         delete_profile_image(profile_image)
 
-    mongo.db.users.delete_one({'_id': user_id})
+    mongo.db.users.delete_one({'_id': ObjectId(user)})
     return jsonify({'msg': 'User deleted successfully',
                     'status': {
                         'name': 'deleted',
