@@ -202,6 +202,8 @@ def register():
 
     if profile_image:
         user['photo_image'] = process_profile_image(profile_image)
+    else:
+        user['photo_image'] = "default.jpg"
 
     mongo.db.users.insert_one(user)
 
