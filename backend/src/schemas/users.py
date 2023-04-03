@@ -7,6 +7,5 @@ schema = {
     'profile_image': {'type': 'string', 'required': False},
 }
 
-
 def validate_user(user):
     return cerberus.Validator(schema).validate(user)

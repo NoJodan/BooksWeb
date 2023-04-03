@@ -13,7 +13,6 @@ def validate_user_by_id(user_id):
         return False
     return True
 
-
 def get_user_id(username):
     if not validate_user(username):
         return None

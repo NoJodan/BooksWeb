@@ -3,8 +3,7 @@ from flask_jwt_extended import get_jwt_identity
 from flask import jsonify
 from utils.users import validate_user, get_user_id
 
-
-def user_access_required(action, name,pass_user_id = False):
+def user_access_required(action, name, pass_user_id = False):
     def decorator(func):
         @wraps(func)
         def decorated_function(*args, **kwargs):
