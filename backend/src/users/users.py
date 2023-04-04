@@ -16,8 +16,29 @@ PROFILE_IMAGES_PATH = app.config['USERS_PROFILE_IMAGES_PATH']
 
 
 @users_blueprint.route('/users/username/<username>', methods=['GET'])
+@jwt_required(optional=True)
 def get_user_data(username):
-    user_id = get_user_id(username)
+    user = mongo.db.users.find_one({'username': username})
+    if not user:
+        return jsonify({'msg': 'User not found', 'status': {
+            'name': 'not_found',
+            'action': 'get',
+            'get': False
+        }})
+    
+    return jsonify({
+        'msg': 'Book retrieved',
+        'status': {
+            'name': 'retrieved',
+            'action': 'get',
+            'get': True
+        },
+        'data': {
+            '_id': str(ObjectId(user['_id'])),
+            'username': user.get('username'),
+            'profile_image': user.get('profile_image')
+        }
+    })
 
 
 @users_blueprint.route('/users/<user>', methods=['DELETE'])
@@ -165,7 +186,6 @@ def login():
 def register():
     username = request.json.get('username')
     password = request.json.get('password')
-    profile_image = request.json.get('profile_image')
 
     if not username or not password:
         return jsonify({'msg': 'Username or password missing',
@@ -197,13 +217,9 @@ def register():
     user = {'username': username,
             'password_hash': get_password(password),
             'admin': False,
+            'profile_image': 'default.jpg',
             'created_at': datetime.datetime.utcnow(),
             }
-
-    if profile_image:
-        user['photo_image'] = process_profile_image(profile_image)
-    else:
-        user['photo_image'] = "default.jpg"
 
     mongo.db.users.insert_one(user)
 
