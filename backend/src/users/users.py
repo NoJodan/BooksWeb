@@ -184,8 +184,8 @@ def login():
 
 @users_blueprint.route('/users', methods=['POST'])
 def register():
-    username = request.form.get('username')
-    password = request.form.get('password')
+    username = request.json.get('username')
+    password = request.json.get('password')
 
     if not username or not password:
         return jsonify({'msg': 'Username or password missing',
@@ -217,17 +217,9 @@ def register():
     user = {'username': username,
             'password_hash': get_password(password),
             'admin': False,
+            'profile_image': 'default.jpg',
             'created_at': datetime.datetime.utcnow(),
             }
-    
-    if 'profile_image' not in request.files:
-        user['profile_image'] = 'default.jpg'
-    else:
-        profile_image = request.files['profile_image']
-        if profile_image.filename == '':
-            user['profile_image'] = 'default.jpg'
-        else:
-            user['profile_image'] = process_profile_image(profile_image)
 
     mongo.db.users.insert_one(user)
 
