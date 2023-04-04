@@ -15,9 +15,9 @@ users_blueprint = blueprints.Blueprint('users', __name__)
 PROFILE_IMAGES_PATH = app.config['USERS_PROFILE_IMAGES_PATH']
 
 
-@users_blueprint.route('/users/username/<username>', methods=['GET'])
+@users_blueprint.route('/users/<username>', methods=['GET'])
 @jwt_required(optional=True)
-def get_user_data(username):
+def getUserData(username):
     user = mongo.db.users.find_one({'username': username})
     if not user:
         return jsonify({'msg': 'User not found', 'status': {
@@ -27,7 +27,7 @@ def get_user_data(username):
         }})
     
     return jsonify({
-        'msg': 'Book retrieved',
+        'msg': 'User retrieved',
         'status': {
             'name': 'retrieved',
             'action': 'get',
@@ -36,7 +36,8 @@ def get_user_data(username):
         'data': {
             '_id': str(ObjectId(user['_id'])),
             'username': user.get('username'),
-            'profile_image': user.get('profile_image')
+            'profile_image': user.get('profile_image'),
+            'created_at': user.get('created_at')
         }
     })
 
@@ -44,7 +45,7 @@ def get_user_data(username):
 @users_blueprint.route('/users/<user>', methods=['DELETE'])
 @jwt_required()
 @user_access_required('delete', 'not_deleted', pass_user_id=True)
-def delete_user(user, user_id):
+def deleteUser(user, user_id):
     if not validate_admin(user_id):
         return jsonify({'msg': 'You are not administrator',
                         'status': {
@@ -89,7 +90,7 @@ def delete_user(user, user_id):
 @users_blueprint.route('/users', methods=['PUT'])
 @jwt_required()
 @user_access_required('update', 'not_updated', pass_user_id=True)
-def update_user(user_id):
+def updateUser(user_id):
     if not validate_user_by_id(user_id):
         return jsonify({'msg': 'User does not exist',
                         'status': {
