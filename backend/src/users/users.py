@@ -2,10 +2,10 @@ import base64
 from flask import request, jsonify, blueprints
 from app import mongo, app
 from flask_pymongo import ObjectId
-from utils.others import process_profile_image, delete_profile_image
+from utils.others import process_profile_image, delete_profile_image, send_profile_image
 from utils.passwords import check_password, get_password
 from utils.users import validate_username, validate_user, get_username, validate_user_by_id, get_user_id, validate_admin
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from utils.decorators import user_access_required
 import datetime
 from flask_jwt_extended import create_access_token
@@ -15,16 +15,19 @@ users_blueprint = blueprints.Blueprint('users', __name__)
 PROFILE_IMAGES_PATH = app.config['USERS_PROFILE_IMAGES_PATH']
 
 
-@users_blueprint.route('/users/<username>', methods=['GET'])
-@jwt_required(optional=True)
-def getUserData(username):
-    user = mongo.db.users.find_one({'username': username})
+@users_blueprint.route('/users/profile', methods=['GET'])
+@jwt_required()
+def getProfile():
+    user_id = get_user_id(get_jwt_identity())
+    user = mongo.db.users.find_one({'_id': user_id})
     if not user:
         return jsonify({'msg': 'User not found', 'status': {
             'name': 'not_found',
             'action': 'get',
             'get': False
         }})
+    
+    image_b64 = send_profile_image(user.get('profile_image'))
     
     return jsonify({
         'msg': 'User retrieved',
@@ -37,7 +40,8 @@ def getUserData(username):
             '_id': str(ObjectId(user['_id'])),
             'username': user.get('username'),
             'profile_image': user.get('profile_image'),
-            'created_at': user.get('created_at')
+            'created_at': user.get('created_at'),
+            'image_b64': image_b64
         }
     })
 

@@ -104,7 +104,7 @@ export const Navigation = () => {
                             ) : (
                                 <>
                                     <NavDropdown title="Name Profile" id="basic-nav-dropdown">
-                                        <NavDropdown.Item href="#action/3.1">
+                                        <NavDropdown.Item href="/profile">
                                             Profile
                                         </NavDropdown.Item>
                                         <NavDropdown.Divider />

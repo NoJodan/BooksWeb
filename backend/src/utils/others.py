@@ -25,3 +25,9 @@ def process_profile_image(file):
         filename = secure_filename(file.filename)
         file.save(os.path.join(os.getcwd() + app.config['USERS_PROFILE_IMAGES_PATH'], filename))
         return filename
+    
+def send_profile_image(name):
+    with open(f'{os.getcwd()}{PROFILE_IMAGES_PATH}/{name}', 'rb') as img_file:
+        image_bytes = img_file.read()
+    image_base64 = base64.b64encode(image_bytes).decode('utf-8')
+    return image_base64
