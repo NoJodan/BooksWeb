@@ -37,7 +37,7 @@ export const Navigation = () => {
 
     return (
         <>
-            <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
+            <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
                 <div className="container-lg">
                     <Link className="navbar-brand" href="/">
                         Books Web
@@ -109,12 +109,11 @@ export const Navigation = () => {
                                         </NavDropdown.Item>
                                         <NavDropdown.Divider />
                                         <NavDropdown.Item onClick={(e) => {
-                                                e.preventDefault();
                                                 localStorage.removeItem(
                                                     "token"
                                                 );
                                                 setJwt(undefined);
-                                            }}>
+                                            }} href="/">
                                             Logout
                                         </NavDropdown.Item>
                                     </NavDropdown>

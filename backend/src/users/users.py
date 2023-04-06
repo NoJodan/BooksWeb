@@ -4,7 +4,7 @@ from app import mongo, app
 from flask_pymongo import ObjectId
 from utils.others import process_profile_image, delete_profile_image, send_profile_image
 from utils.passwords import check_password, get_password
-from utils.users import validate_username, validate_user, get_username, validate_user_by_id, get_user_id, validate_admin
+from utils.users import validate_username, validate_user, get_username, validate_user_by_id, get_user_id, validate_admin, validate_email
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from utils.decorators import user_access_required
 import datetime
@@ -191,9 +191,10 @@ def login():
 def register():
     username = request.json.get('username')
     password = request.json.get('password')
+    email = request.json.get('email')
 
-    if not username or not password:
-        return jsonify({'msg': 'Username or password missing',
+    if not username or not password or not email:
+        return jsonify({'msg': 'Username, email or password missing',
                         'status': {
                             'name': 'invalid_data',
                             'action': 'register',
@@ -203,6 +204,15 @@ def register():
 
     if validate_user(username):
         return jsonify({'msg': 'Username already exists',
+                        'status': {
+                            'name': 'data_conflict',
+                            'action': 'register',
+                            'register': False
+                        }
+                        }), 400
+    
+    if validate_email(email):
+        return jsonify({'msg': 'Email already exists',
                         'status': {
                             'name': 'data_conflict',
                             'action': 'register',
@@ -221,6 +231,7 @@ def register():
 
     user = {'username': username,
             'password_hash': get_password(password),
+            'email': email,
             'admin': False,
             'profile_image': 'default.jpg',
             'created_at': datetime.datetime.utcnow(),

@@ -8,6 +8,12 @@ def validate_user(username):
         return False
     return True
 
+def validate_email(email):
+    user = mongo.db.users.find_one({'email': email})
+    if not user:
+        return False
+    return True
+
 def validate_user_by_id(user_id):
     if isinstance(user_id, ObjectId):
         user = mongo.db.users.find_one({'_id': user_id})

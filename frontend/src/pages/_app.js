@@ -1,4 +1,4 @@
-import 'bootswatch/dist/sketchy/bootstrap.min.css'
+import 'bootstrap/dist/css/bootstrap.css'
 import '@/styles/globals.css'
 import { useEffect } from 'react'
 
