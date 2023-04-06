@@ -15,6 +15,41 @@ users_blueprint = blueprints.Blueprint('users', __name__)
 PROFILE_IMAGES_PATH = app.config['USERS_PROFILE_IMAGES_PATH']
 
 
+@users_blueprint.route('/users/<username>', methods=['GET'])
+@jwt_required(optional=True)
+def getUserData(username):
+    user = mongo.db.users.find_one({'username': username})
+    if not user:
+        return jsonify({'msg': 'User not found', 'status': {
+            'name': 'not_found',
+            'action': 'get',
+            'get': False
+        }})
+    
+    image_b64 = send_profile_image(user.get('profile_image'))
+    
+    return jsonify({
+        'msg': 'User retrieved',
+        'status': {
+            'name': 'retrieved',
+            'action': 'get',
+            'get': True
+        },
+        'data': {
+            '_id': str(ObjectId(user['_id'])),
+            'username': user.get('username'),
+            'email': user.get('email'),
+            'about': user.get('about'),
+            'books_owned': user.get('books_owned'),
+            'followers': user.get('followers'),
+            'following': user.get('following'),
+            'profile_image': user.get('profile_image'),
+            'created_at': user.get('created_at'),
+            'image_b64': image_b64
+        }
+    })
+
+
 @users_blueprint.route('/users/profile', methods=['GET'])
 @jwt_required()
 def getProfile():
@@ -39,6 +74,11 @@ def getProfile():
         'data': {
             '_id': str(ObjectId(user['_id'])),
             'username': user.get('username'),
+            'email': user.get('email'),
+            'about': user.get('about'),
+            'books_owned': user.get('books_owned'),
+            'followers': user.get('followers'),
+            'following': user.get('following'),
             'profile_image': user.get('profile_image'),
             'created_at': user.get('created_at'),
             'image_b64': image_b64
@@ -232,6 +272,10 @@ def register():
     user = {'username': username,
             'password_hash': get_password(password),
             'email': email,
+            'books_owned': 0,
+            'followers': 0,
+            'following': 0,
+            'about': 'New account',
             'admin': False,
             'profile_image': 'default.jpg',
             'created_at': datetime.datetime.utcnow(),
